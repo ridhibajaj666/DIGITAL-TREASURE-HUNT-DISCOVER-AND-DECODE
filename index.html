@@ -76,68 +76,85 @@
     </div>
 
     <script>
-        const terminal = document.getElementById("terminal");
-        const input = document.getElementById("command");
+    const terminal = document.getElementById("terminal");
+    const input = document.getElementById("command");
 
-        function print(text) {
-            const line = document.createElement("div");
-            line.className = "line";
-            line.innerHTML = text;  
-            terminal.appendChild(line);
+    let finalStage = false; // NEW
+
+    function print(text) {
+        const line = document.createElement("div");
+        line.className = "line";
+        line.innerHTML = text;
+        terminal.appendChild(line);
+    }
+
+    input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            const cmd = input.value.trim().toLowerCase();
+            print("> " + cmd);
+            handleCommand(cmd);
+            input.value = "";
+        }
+    });
+
+    function handleCommand(cmd) {
+
+        // FINAL CLUE CHECK
+        if (finalStage) {
+            if (cmd === "secret") {
+                print("✔ Final Clue Accepted");
+                print("🎉 ROUND CLEARED 🎉");
+                finalStage = false;
+            } else {
+                print("❌ Incorrect Final Clue");
+            }
+            return;
         }
 
-        input.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                const cmd = input.value.trim().toLowerCase();
-                print("> " + cmd);
-                handleCommand(cmd);
-                input.value = "";
-            }
-        });
-
-        function handleCommand(cmd) {
-
-            if (cmd === "help") {
-                print("Commands:");
-                print("log.txt, scan, clear");
-            }
-
-            else if (cmd === "log.txt") {
-                print("Access attempt detected...");
-                print("user: unknown");
-                print("hint: inspect deeper");
-            }
-
-            else if (cmd === "scan") {
-                print("> Scanning system...");
-                print("Hidden file detected: <a href='https://drive.google.com/file/d/1N1WdClbHG0u71Lj1_n-qOARn9uCSQgP_/view?usp=sharing' target='_blank' style='color:#00ff88; text-decoration:none;'>.shadow</a>");
-            }
-
-            else if (cmd === "clear") {
-                terminal.innerHTML = "";
-            }
-
-            else {
-                print("Command not recognized.");
-            }
+        if (cmd === "help") {
+            print("Commands:");
+            print("log.txt, scan, clear");
         }
 
-        function openLink() {
-            print("> Opening secure channel...");
-            print("> Access granted");
+        else if (cmd === "log.txt") {
+            print("Access attempt detected...");
+            print("user: unknown");
+            print("hint: inspect deeper");
+        }
 
-            terminal.innerHTML += `
+        else if (cmd === "scan") {
+            print("> Scanning system...");
+            print("Hidden file detected: <a href='https://drive.google.com/file/d/1N1WdClbHG0u71Lj1_n-qOARn9uCSQgP_/view?usp=sharing' target='_blank' style='color:#00ff88; text-decoration:none;'>.shadow</a>");
+        }
+
+        else if (cmd === "clear") {
+            terminal.innerHTML = "";
+        }
+
+        else {
+            print("Command not recognized.");
+        }
+    }
+
+    function openLink() {
+        print("> Opening secure channel...");
+        print("> Access granted");
+
+        terminal.innerHTML += `
         <div class='line'>-----------------------------</div>
         <div class='line'>Hidden Resource Loaded</div>
         <div class='line'>Encoded Clue: CRYPTO</div>
         <div class='line'>-----------------------------</div>
+        <div class='line'>ENTER FINAL CLUE:</div>
         `;
 
-            terminal.scrollTop = terminal.scrollHeight;
+        finalStage = true; // ENABLE FINAL INPUT
 
-            document.querySelector("button").innerText = "Resource Accessed";
-        }
-    </script>
+        terminal.scrollTop = terminal.scrollHeight;
+
+        document.querySelector("button").innerText = "Resource Accessed";
+    }
+</script>
 
 </body>
 
